@@ -1,0 +1,16 @@
+
+clk/
+
+edit_ip_project\.cache/
+
+edit_ip_project2\.cache/
+
+pomg/
+
+zybo-vga-master/
+
+edit_ip_project\.xpr
+
+edit_ip_project2\.xpr
+
+pong/pong\.sdk/\.metadata/

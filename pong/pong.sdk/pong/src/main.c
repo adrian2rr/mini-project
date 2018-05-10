@@ -71,11 +71,11 @@ int main_thread()
 
 	print("Inicio\n");
 	RGB color;
-	//PALA pala;
+	PALA pala;
 
 	lwip_init();
 	init_gpios();
-	//network_thread();
+	network_thread();
 
 	print("Plot\n");
 
@@ -87,7 +87,7 @@ int main_thread()
 	color = pon_color(5,10,100);
 	plot_frame(color);
 
-	/*color = pon_color(0,0,100);
+	color = pon_color(0,0,100);
 
 	plot_red(color, FRAME_SIZE/2, 10);
 
@@ -97,7 +97,7 @@ int main_thread()
 
 	pala = crear_pala(color, FRAME_SIZE, 150, 10);
 	pala.pos = 700;
-	plot_pala(pala, 2);*/
+	plot_pala(pala, 2);
 
 	sys_thread_new("game_thread", (void(*)(void*))game_thread, 0,
 						THREAD_STACKSIZE,
