@@ -1,0 +1,41 @@
+#-----------------------------------------------------------
+# Vivado v2014.3.1 (64-bit)
+# SW Build 1056140 on Thu Oct 30 17:03:40 MDT 2014
+# IP Build 1028902 on Fri Sep 26 17:35:13 MDT 2014
+# Start of session at: Thu May 10 00:49:41 2018
+# Process ID: 4600
+# Log file: C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/vivado.log
+# Journal file: C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.xpr
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository 'c:/users/adrianrodriguezrodri/desktop/mini-project/zybo-vga-master'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2014.3.1/data/ip'.
+open_project: Time (s): cpu = 00:00:44 ; elapsed = 00:00:21 . Memory (MB): peak = 818.316 ; gain = 273.992
+open_bd_design {C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.srcs/sources_1/bd/design_1/design_1.bd}
+Adding component instance block -- xilinx.com:ip:processing_system7:5.5 - processing_system7_0
+Adding component instance block -- xilinx.com:ip:blk_mem_gen:8.2 - blk_mem_gen_0
+Adding component instance block -- xilinx.com:ip:xlslice:1.0 - blue
+Adding component instance block -- xilinx.com:ip:xlslice:1.0 - red
+Adding component instance block -- xilinx.com:ip:xlslice:1.0 - gre
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - btn
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - led
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - sw
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - add_gre
+Adding component instance block -- xilinx.com:ip:axi_gpio:2.0 - red_blue
+Adding component instance block -- xilinx.com:ip:xlconcat:2.1 - xlconcat_0
+Adding component instance block -- xilinx.com:ip:xlconstant:1.1 - xlconstant_0
+Adding component instance block -- xilinx.com:ip:xlslice:1.0 - vert
+Adding component instance block -- xilinx.com:ip:xlslice:1.0 - hor
+Adding component instance block -- xilinx.com:ip:xlconcat:2.1 - xlconcat_1
+Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - rst_processing_system7_0_100M
+Adding component instance block -- xilinx.com:ip:VGA_SYNC:1.0 - VGA_SYNC_0
+Adding component instance block -- xilinx.com:ip:axi_crossbar:2.1 - xbar
+Adding component instance block -- xilinx.com:ip:axi_protocol_converter:2.1 - auto_pc
+Successfully read diagram <design_1> from BD file <C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.srcs/sources_1/bd/design_1/design_1.bd>
+open_bd_design: Time (s): cpu = 00:00:17 ; elapsed = 00:00:16 . Memory (MB): peak = 863.234 ; gain = 44.918
+exit
+INFO: [Common 17-206] Exiting Vivado at Thu May 10 01:00:41 2018...
