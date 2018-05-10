@@ -8,19 +8,25 @@ LD_SRCS += \
 
 C_SRCS += \
 ../src/game.c \
+../src/logicas.c \
 ../src/main.c \
+../src/network.c \
 ../src/plot.c \
 ../src/utils.c 
 
 OBJS += \
 ./src/game.o \
+./src/logicas.o \
 ./src/main.o \
+./src/network.o \
 ./src/plot.o \
 ./src/utils.o 
 
 C_DEPS += \
 ./src/game.d \
+./src/logicas.d \
 ./src/main.d \
+./src/network.d \
 ./src/plot.d \
 ./src/utils.d 
 
