@@ -92,19 +92,46 @@ void plot_pala(PALA pala, int jugador)
 
 	int x, y, x_ini;
 
-	pixel = pon_color_pixel(pala.color);
-
 	if (jugador == 1){
 		x_ini = FRAME_OFFSET+FRAME_SIZE+pala.margen;
 	}else{
 		x_ini = MAP_RES-(FRAME_OFFSET+FRAME_SIZE+pala.margen+pala.ancho);
 	}
 
-	for (y=pala.pos; y<pala.pos+pala.largo; y++){
-		pixel.y = y;
-		for(x = x_ini; x<x_ini+pala.ancho; x++){
-			pixel.x = x;
-			plot_pixel(pixel);
+	if (pala.pos > pala.lpos){
+		pixel = pon_color_pixel(pala.fondo);
+		for (y=pala.lpos; y<pala.pos; y++){
+			pixel.y = y;
+			for(x = x_ini; x<x_ini+pala.ancho; x++){
+				pixel.x = x;
+				plot_pixel(pixel);
+			}
+		}
+		pixel = pon_color_pixel(pala.color);
+		for (y=pala.pos; y<pala.pos+pala.largo; y++){
+			pixel.y = y;
+			for(x = x_ini; x<x_ini+pala.ancho; x++){
+				pixel.x = x;
+				plot_pixel(pixel);
+			}
+		}
+	}
+	else{
+		pixel = pon_color_pixel(pala.color);
+		for(y=pala.pos; y<pala.pos+pala.largo; y++){
+			pixel.y = y;
+			for(x = x_ini; x<x_ini+pala.ancho; x++){
+						pixel.x = x;
+						plot_pixel(pixel);
+			}
+		}
+		pixel = pon_color_pixel(pala.fondo);
+		for(y=pala.pos+pala.largo; y<pala.lpos; y++){
+					pixel.y = y;
+					for(x = x_ini; x<x_ini+pala.ancho; x++){
+								pixel.x = x;
+								plot_pixel(pixel);
+					}
 		}
 	}
 

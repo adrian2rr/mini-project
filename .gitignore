@@ -16,3 +16,7 @@ edit_ip_project2\.xpr
 pong/pong\.sdk/\.metadata/
 
 pong/pong\.sdk/pong/Debug/
+
+\.idea/
+
+pong/pong\.sdk/SDK\.log

@@ -40,6 +40,7 @@ void control_pala(){
 		if ( (bt & 1) == 1 ){
 
 			if ( pala1.pos+pala_sp < bot_limit+pala1.largo ){
+				pala1.lpos = pala1.pos;
 				pala1.pos = pala1.pos+pala_sp;
 				plot_pala(pala1, 1);
 			}
@@ -47,6 +48,7 @@ void control_pala(){
 		}else if ( (bt & 2) == 1){
 
 			if ( pala1.pos-pala_sp > top_limit ){
+				pala1.lpos = pala1.pos;
 				pala1.pos = pala1.pos-pala_sp;
 				plot_pala(pala1, 1);
 			}
@@ -77,6 +79,8 @@ void game_thread(){
 
 	pala1 = crear_pala(pon_color(100,100,100) , FRAME_SIZE, 100, 10);
 	pala1.pos = 300;
+	pala1.lpos = 300;
+	pala1.fondo = pon_color(0,0,0);
 
 	pala_sp = PALA_DEF_SP;
 

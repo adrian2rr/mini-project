@@ -37,9 +37,11 @@ typedef struct RGB {
 
 typedef struct PALA {
 	RGB color;
+	RGB fondo;
 	int ancho;
 	int largo;
 	int pos;
+	int lpos;
 	int margen;
 } PALA;
 
