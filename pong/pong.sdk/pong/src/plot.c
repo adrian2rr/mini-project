@@ -45,8 +45,8 @@ void plot_frame(RGB color)
 			}
 		}else if(y > MAP_RES-(FRAME_SIZE+FRAME_OFFSET)){
 			for (x=FRAME_OFFSET; x<MAP_RES-FRAME_OFFSET; x++){
-							pixel.x = x;
-							plot_pixel(pixel);
+				pixel.x = x;
+				plot_pixel(pixel);
 			}
 		}else{
 			for (x=FRAME_OFFSET; x < FRAME_OFFSET+FRAME_SIZE; x++){
@@ -58,8 +58,6 @@ void plot_frame(RGB color)
 		}
 	}
 
-	plot_pixel(pixel);
-
 	return;
 }
 
@@ -69,7 +67,7 @@ void plot_red(RGB color, int size, int num)
 
 	int x, y, e;
 
-	num = (MAP_RES-2*(FRAME_OFFSET+FRAME_SIZE))/2*num;
+	num = (MAP_RES-2*(FRAME_OFFSET+FRAME_SIZE))/(2*num);
 
 	pixel = pon_color_pixel(color);
 
@@ -134,6 +132,49 @@ void plot_pala(PALA pala, int jugador)
 					}
 		}
 	}
+
+	return;
+}
+
+
+void plot_ball(BALL ball)
+{
+	PIXEL pixel;
+
+	int x, y, no_plot;
+
+	const int ball_plot[10] = {0, 0, 1, 1, 2, 2, 2, 3, 3, 3};
+
+	no_plot = ball_plot[ball.size-1];
+
+	pixel = pon_color_pixel(ball.fondo);
+
+	for (y = 0; y < ball.size; y++){
+		pixel.y = ball.lposy+y;
+		for (x = 0;x < ball.size; x++){
+			pixel.x = ball.lposx+x;
+			plot_pixel(pixel);
+		}
+	}
+
+	pixel = pon_color_pixel(ball.color);
+
+	for (y = 0; y < ball.size; y++){
+		pixel.y = ball.posy+y;
+		for(x = 0; x < ball.size; x++){
+			if(y >= no_plot && y < ball.size-no_plot){
+				pixel.x = ball.posx+x;
+				plot_pixel(pixel);
+			}else if(y > 0 && y < ball.size-1 && x > 0 && x < ball.size-1){
+				pixel.x = ball.posx+x;
+				plot_pixel(pixel);
+			}else if(x >= no_plot && x < ball.size-no_plot){
+				pixel.x = ball.posx+x;
+				plot_pixel(pixel);
+			}
+		}
+	}
+
 
 	return;
 }

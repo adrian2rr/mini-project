@@ -72,6 +72,7 @@ int main_thread()
 	print("Inicio\n");
 	RGB color;
 	PALA pala;
+	BALL ball;
 
 	lwip_init();
 	init_gpios();
@@ -79,7 +80,7 @@ int main_thread()
 
 	print("Plot\n");
 
-	color = pon_color(100,100,0);
+	color = pon_color(0,0,0);
 	plot_back(color);
 
 	print("Plot frame\n");
@@ -98,6 +99,9 @@ int main_thread()
 	pala = crear_pala(color, FRAME_SIZE, 150, 10);
 	pala.pos = 700;
 	plot_pala(pala, 2);
+
+	ball = crear_ball(color, pon_color(0,0,0), 5, 200, 200);
+	plot_ball(ball);
 
 	sys_thread_new("game_thread", (void(*)(void*))game_thread, 0,
 						THREAD_STACKSIZE,

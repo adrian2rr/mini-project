@@ -24,4 +24,8 @@ extern PIXEL pon_color_pixel(RGB color);
 
 extern PALA crear_pala(RGB color, int ancho, int largo, int margen);
 
+extern BALL crear_ball(RGB color, RGB fondo, int size, int x, int y);
+
+extern BALL mover_ball(BALL ball, int x, int y);
+
 #endif /* UTILS_H_ */

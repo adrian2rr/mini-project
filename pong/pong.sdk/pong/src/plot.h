@@ -16,4 +16,6 @@ extern void plot_red(RGB color, int size, int num);
 
 extern void plot_pala(PALA pala, int jugador);
 
+extern void plot_ball(BALL ball);
+
 #endif /* PLOT_H_ */

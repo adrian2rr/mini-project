@@ -50,4 +50,14 @@ typedef struct PALA {
 
 #define PALA_DEF_SP 10
 
+typedef struct BALL {
+	RGB color;
+	RGB fondo;
+	int size;
+	int posx;
+	int posy;
+	int lposx;
+	int lposy;
+} BALL;
+
 #endif /* CONFIG_H_ */

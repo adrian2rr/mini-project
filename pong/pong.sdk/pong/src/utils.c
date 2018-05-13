@@ -8,6 +8,7 @@
 #include "xgpio.h"
 
 #include "config.h"
+#include "plot.h"
 
 XGpio addgre, redblu, leds, bots, sws;
 
@@ -112,4 +113,29 @@ PALA crear_pala(RGB color, int ancho, int largo, int margen){
 	pala.margen = margen;
 
 	return pala;
+}
+
+BALL crear_ball(RGB color, RGB fondo, int size, int x, int y){
+
+	BALL ball;
+
+	ball.color = color;
+	ball.fondo = fondo;
+	ball.size = size;
+	ball.posx = x;
+	ball.posy = y;
+
+	return ball;
+}
+
+BALL mover_ball(BALL ball, int x, int y){
+
+	ball.lposx = ball.posx;
+	ball.lposy = ball.posy;
+	ball.posx += x;
+	ball.posy += y;
+
+	plot_ball(ball);
+
+	return ball;
 }
