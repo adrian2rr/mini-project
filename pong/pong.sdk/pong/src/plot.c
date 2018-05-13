@@ -112,4 +112,16 @@ void plot_pala(PALA pala, int jugador)
 }
 
 
+void plot_scoreboard()
+{
+
+
+	return;
+}
+
+
+
+
+
+
 
