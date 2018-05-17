@@ -70,6 +70,16 @@ void control_general(){
 	return;
 }
 
+int* getPala1Pos(){
+	//ancho, largo, pos, margen
+	static int r[4];
+
+	r[0] = pala1.ancho;
+	r[1] = pala1.largo;
+	r[2] = pala1.pos;
+	r[3] = pala1.margen;
+	return r;
+}
 
 //====================================================
 

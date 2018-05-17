@@ -61,7 +61,7 @@ void network_thread()
 }
 
 void game_thread();
-
+void network_main();
 
 //====================================================
 
@@ -99,6 +99,8 @@ int main_thread()
 	pala.pos = 700;
 	plot_pala(pala, 2);
 
+	network_main();
+
 	sys_thread_new("game_thread", (void(*)(void*))game_thread, 0,
 						THREAD_STACKSIZE,
 					    DEFAULT_THREAD_PRIO);
@@ -110,6 +112,7 @@ int main_thread()
 
 int main()
 {
+	network_main();
 
 	sys_thread_new("main_thread", (void(*)(void*))main_thread, 0,
 					THREAD_STACKSIZE,
@@ -122,7 +125,7 @@ int main()
 }
 
 //====================================================
-
+// jfkf
 void vApplicationMallocFailedHook( void )
 {
 	/* vApplicationMallocFailedHook() will only be called if
