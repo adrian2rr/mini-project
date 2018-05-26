@@ -51,10 +51,10 @@ set rc [catch {
   set_param gui.test TreeTableDev
   debug::add_scope template.lib 1
   open_checkpoint design_1_wrapper_routed.dcp
-  set_property webtalk.parent_dir C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.cache/wt [current_project]
+  set_property webtalk.parent_dir Z:/mini-project/pong/pong.cache/wt [current_project]
   write_bitstream -force design_1_wrapper.bit 
-  if { [file exists C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.runs/synth_1/design_1_wrapper.hwdef] } {
-    catch { write_sysdef -hwdef C:/Users/adrianrodriguezrodri/Desktop/mini-project/pong/pong.runs/synth_1/design_1_wrapper.hwdef -bitfile design_1_wrapper.bit -meminfo design_1_wrapper.mmi -file design_1_wrapper.sysdef }
+  if { [file exists Z:/mini-project/pong/pong.runs/synth_1/design_1_wrapper.hwdef] } {
+    catch { write_sysdef -hwdef Z:/mini-project/pong/pong.runs/synth_1/design_1_wrapper.hwdef -bitfile design_1_wrapper.bit -meminfo design_1_wrapper.mmi -file design_1_wrapper.sysdef }
   }
   close_msg_db -file write_bitstream.pb
 } RESULT]

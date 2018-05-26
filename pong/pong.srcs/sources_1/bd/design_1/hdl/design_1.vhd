@@ -1,7 +1,7 @@
 --Copyright 1986-2014 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2014.3.1 (win64) Build 1056140 Thu Oct 30 17:03:40 MDT 2014
---Date        : Thu May 10 11:49:46 2018
+--Date        : Fri May 25 17:33:22 2018
 --Host        : ADRINRODRGU0910 running 64-bit major release  (build 9200)
 --Command     : generate_target design_1.bd
 --Design      : design_1
@@ -2106,9 +2106,9 @@ architecture STRUCTURE of design_1 is
   component design_1_VGA_SYNC_0_1 is
   port (
     clock_25Mhz : in STD_LOGIC;
-    red : in STD_LOGIC;
-    green : in STD_LOGIC;
-    blue : in STD_LOGIC;
+    red : in STD_LOGIC_VECTOR ( 4 downto 0 );
+    green : in STD_LOGIC_VECTOR ( 5 downto 0 );
+    blue : in STD_LOGIC_VECTOR ( 4 downto 0 );
     vga_r : out STD_LOGIC_VECTOR ( 4 downto 0 );
     vga_b : out STD_LOGIC_VECTOR ( 4 downto 0 );
     vga_g : out STD_LOGIC_VECTOR ( 5 downto 0 );
@@ -2329,12 +2329,12 @@ VCC: unisim.vcomponents.VCC
     );
 VGA_SYNC_0: component design_1_VGA_SYNC_0_1
     port map (
-      blue => blue_Dout(0),
+      blue(4 downto 0) => blue_Dout(4 downto 0),
       clock_25Mhz => processing_system7_0_FCLK_CLK1,
-      green => gre_Dout(0),
+      green(5 downto 0) => gre_Dout(5 downto 0),
       pixel_column(9 downto 0) => VGA_SYNC_0_pixel_column(9 downto 0),
       pixel_row(9 downto 0) => VGA_SYNC_0_pixel_row(9 downto 0),
-      red => red_Dout(0),
+      red(4 downto 0) => red_Dout(4 downto 0),
       vga_b(4 downto 0) => VGA_SYNC_0_vga_b(4 downto 0),
       vga_g(5 downto 0) => VGA_SYNC_0_vga_g(5 downto 0),
       vga_hs => VGA_SYNC_0_vga_hs,
@@ -2370,7 +2370,7 @@ blk_mem_gen_0: component design_1_blk_mem_gen_0_0
       addra(16 downto 0) => axi_gpio_0_gpio_io_o(16 downto 0),
       addrb(16 downto 0) => xlconcat_1_dout(16 downto 0),
       clka => processing_system7_0_FCLK_CLK0,
-      clkb => processing_system7_0_FCLK_CLK0,
+      clkb => processing_system7_0_FCLK_CLK1,
       dina(15 downto 0) => xlconcat_0_dout(15 downto 0),
       doutb(15 downto 0) => blk_mem_gen_0_doutb(15 downto 0),
       wea(0) => xlconstant_0_dout(0)
