@@ -47,7 +47,7 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:VGA_SYNC:1.0
--- IP Revision: 2
+-- IP Revision: 13
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
@@ -56,9 +56,9 @@ USE ieee.numeric_std.ALL;
 ENTITY design_1_VGA_SYNC_0_1 IS
   PORT (
     clock_25Mhz : IN STD_LOGIC;
-    red : IN STD_LOGIC;
-    green : IN STD_LOGIC;
-    blue : IN STD_LOGIC;
+    red : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+    green : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+    blue : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
     vga_r : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
     vga_b : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
     vga_g : OUT STD_LOGIC_VECTOR(5 DOWNTO 0);
@@ -76,9 +76,9 @@ ARCHITECTURE design_1_VGA_SYNC_0_1_arch OF design_1_VGA_SYNC_0_1 IS
   COMPONENT VGA_SYNC IS
     PORT (
       clock_25Mhz : IN STD_LOGIC;
-      red : IN STD_LOGIC;
-      green : IN STD_LOGIC;
-      blue : IN STD_LOGIC;
+      red : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+      green : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+      blue : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
       vga_r : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
       vga_b : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
       vga_g : OUT STD_LOGIC_VECTOR(5 DOWNTO 0);
@@ -93,7 +93,7 @@ ARCHITECTURE design_1_VGA_SYNC_0_1_arch OF design_1_VGA_SYNC_0_1 IS
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF design_1_VGA_SYNC_0_1_arch : ARCHITECTURE IS "design_1_VGA_SYNC_0_1,VGA_SYNC,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF design_1_VGA_SYNC_0_1_arch: ARCHITECTURE IS "design_1_VGA_SYNC_0_1,VGA_SYNC,{x_ipProduct=Vivado 2014.3.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=VGA_SYNC,x_ipVersion=1.0,x_ipCoreRevision=2,x_ipLanguage=VHDL}";
+  ATTRIBUTE CORE_GENERATION_INFO OF design_1_VGA_SYNC_0_1_arch: ARCHITECTURE IS "design_1_VGA_SYNC_0_1,VGA_SYNC,{x_ipProduct=Vivado 2014.3.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=VGA_SYNC,x_ipVersion=1.0,x_ipCoreRevision=13,x_ipLanguage=VHDL}";
 BEGIN
   U0 : VGA_SYNC
     PORT MAP (

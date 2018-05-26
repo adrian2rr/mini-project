@@ -1,0 +1,70 @@
+Copyright 1986-2014 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2014.3.1 (win64) Build 1056140 Thu Oct 30 17:03:40 MDT 2014
+| Date         : Fri May 25 17:31:48 2018
+| Host         : ADRINRODRGU0910 running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7z010clg400-1
+--------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'design_1_VGA_SYNC_0_1'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of design_1_VGA_SYNC_0_1 (xilinx.com:ip:VGA_SYNC:1.0) from (Rev. 12) to (Rev. 13)
+
+
+
+
+
+
+Copyright 1986-2014 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2014.3.1 (win64) Build 1056140 Thu Oct 30 17:03:40 MDT 2014
+| Date         : Fri May 25 17:27:08 2018
+| Host         : ADRINRODRGU0910 running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7z010clg400-1
+--------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'design_1_VGA_SYNC_0_1'
+
+1. Summary
+----------
+
+CAUTION (success, with warnings) in the upgrade of design_1_VGA_SYNC_0_1 (xilinx.com:ip:VGA_SYNC:1.0) from (Rev. 11) to (Rev. 12)
+
+After upgrade, an IP may have parameter and port differences compared to the original customization. Please review the parameters within the IP customization GUI to ensure proper functionality. Also, please review the updated IP instantiation template to ensure proper connectivity, and update your design if required.
+
+2. Connection Warnings
+----------------------
+
+Detected external port differences while upgrading IP 'design_1_VGA_SYNC_0_1'. These changes may impact your design.
+
+
+-upgraded port 'blue' width 5 differs from original width 1
+-upgraded port 'green' width 6 differs from original width 1
+-upgraded port 'red' width 5 differs from original width 1
+
+
+
+
+
+
+Copyright 1986-2014 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2014.3.1 (win64) Build 1056140 Thu Oct 30 17:03:40 MDT 2014
+| Date         : Fri May 25 17:11:22 2018
+| Host         : ADRINRODRGU0910 running 64-bit major release  (build 9200)
+| Command      : upgrade_ip
+| Device       : xc7z010clg400-1
+--------------------------------------------------------------------------------------
+
+Upgrade Log for IP 'design_1_VGA_SYNC_0_1'
+
+1. Summary
+----------
+
+SUCCESS in the upgrade of design_1_VGA_SYNC_0_1 (xilinx.com:ip:VGA_SYNC:1.0) from (Rev. 2) to (Rev. 11)
+

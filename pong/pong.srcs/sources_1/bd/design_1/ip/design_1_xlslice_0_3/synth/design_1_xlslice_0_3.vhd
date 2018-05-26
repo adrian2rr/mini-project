@@ -83,13 +83,13 @@ ARCHITECTURE design_1_xlslice_0_3_arch OF design_1_xlslice_0_3 IS
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF design_1_xlslice_0_3_arch : ARCHITECTURE IS "design_1_xlslice_0_3,xlslice,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF design_1_xlslice_0_3_arch: ARCHITECTURE IS "design_1_xlslice_0_3,xlslice,{x_ipProduct=Vivado 2014.3.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=xlslice,x_ipVersion=1.0,x_ipCoreRevision=-1,x_ipLanguage=VHDL,DIN_WIDTH=10,DIN_FROM=9,DIN_TO=2}";
+  ATTRIBUTE CORE_GENERATION_INFO OF design_1_xlslice_0_3_arch: ARCHITECTURE IS "design_1_xlslice_0_3,xlslice,{x_ipProduct=Vivado 2014.3.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=xlslice,x_ipVersion=1.0,x_ipCoreRevision=-1,x_ipLanguage=VHDL,DIN_WIDTH=10,DIN_FROM=8,DIN_TO=1}";
 BEGIN
   U0 : xlslice
     GENERIC MAP (
       DIN_WIDTH => 10,
-      DIN_FROM => 9,
-      DIN_TO => 2
+      DIN_FROM => 8,
+      DIN_TO => 1
     )
     PORT MAP (
       Din => Din,

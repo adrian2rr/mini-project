@@ -182,7 +182,7 @@ proc create_root_design { parentCell } {
 
   # Create instance: hor, and set properties
   set hor [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 hor ]
-  set_property -dict [ list CONFIG.DIN_FROM {9} CONFIG.DIN_TO {1} CONFIG.DIN_WIDTH {10} CONFIG.DOUT_WIDTH {9}  ] $hor
+  set_property -dict [ list CONFIG.DIN_FROM {9} CONFIG.DIN_TO {1} CONFIG.DIN_WIDTH {10}  ] $hor
 
   # Create instance: led, and set properties
   set led [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 led ]
@@ -213,7 +213,7 @@ proc create_root_design { parentCell } {
 
   # Create instance: vert, and set properties
   set vert [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 vert ]
-  set_property -dict [ list CONFIG.DIN_FROM {9} CONFIG.DIN_TO {2} CONFIG.DIN_WIDTH {10} CONFIG.DOUT_WIDTH {8}  ] $vert
+  set_property -dict [ list CONFIG.DIN_FROM {8} CONFIG.DIN_TO {1} CONFIG.DIN_WIDTH {10} CONFIG.DOUT_WIDTH {8}  ] $vert
 
   # Create instance: xlconcat_0, and set properties
   set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
@@ -253,8 +253,8 @@ proc create_root_design { parentCell } {
   connect_bd_net -net blue_Dout [get_bd_pins VGA_SYNC_0/blue] [get_bd_pins blue/Dout]
   connect_bd_net -net gre_Dout [get_bd_pins VGA_SYNC_0/green] [get_bd_pins gre/Dout]
   connect_bd_net -net hor_Dout [get_bd_pins hor/Dout] [get_bd_pins xlconcat_1/In0]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins add_gre/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_0/clkb] [get_bd_pins btn/s_axi_aclk] [get_bd_pins led/s_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0_axi_periph/ACLK] [get_bd_pins processing_system7_0_axi_periph/M00_ACLK] [get_bd_pins processing_system7_0_axi_periph/M01_ACLK] [get_bd_pins processing_system7_0_axi_periph/M02_ACLK] [get_bd_pins processing_system7_0_axi_periph/M03_ACLK] [get_bd_pins processing_system7_0_axi_periph/M04_ACLK] [get_bd_pins processing_system7_0_axi_periph/S00_ACLK] [get_bd_pins red_blue/s_axi_aclk] [get_bd_pins rst_processing_system7_0_100M/slowest_sync_clk] [get_bd_pins sw/s_axi_aclk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins VGA_SYNC_0/clock_25Mhz] [get_bd_pins processing_system7_0/FCLK_CLK1]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins add_gre/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins btn/s_axi_aclk] [get_bd_pins led/s_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0_axi_periph/ACLK] [get_bd_pins processing_system7_0_axi_periph/M00_ACLK] [get_bd_pins processing_system7_0_axi_periph/M01_ACLK] [get_bd_pins processing_system7_0_axi_periph/M02_ACLK] [get_bd_pins processing_system7_0_axi_periph/M03_ACLK] [get_bd_pins processing_system7_0_axi_periph/M04_ACLK] [get_bd_pins processing_system7_0_axi_periph/S00_ACLK] [get_bd_pins red_blue/s_axi_aclk] [get_bd_pins rst_processing_system7_0_100M/slowest_sync_clk] [get_bd_pins sw/s_axi_aclk]
+  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins VGA_SYNC_0/clock_25Mhz] [get_bd_pins blk_mem_gen_0/clkb] [get_bd_pins processing_system7_0/FCLK_CLK1]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_processing_system7_0_100M/ext_reset_in]
   connect_bd_net -net red_Dout [get_bd_pins VGA_SYNC_0/red] [get_bd_pins red/Dout]
   connect_bd_net -net red_blue_gpio2_io_o [get_bd_pins red_blue/gpio2_io_o] [get_bd_pins xlconcat_0/In2]

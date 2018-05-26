@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Thu May 10 11:49:43 2018" VIVADOVERSION="2014.3.1">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Fri May 25 17:33:19 2018" VIVADOVERSION="2014.3.1">
 
   <SYSTEMINFO ARCH="zynq" BOARD="digilentinc.com:zybo:part0:1.0" DEVICE="7z010" NAME="design_1_imp" PACKAGE="clg400" SPEEDGRADE="-1"/>
 
@@ -68,17 +68,17 @@
             <CONNECTION INSTANCE="ps7_clockc_0" PORT="FCLK1"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="red" SIGIS="undef" SIGNAME="red_Dout">
+        <PORT DIR="I" LEFT="4" NAME="red" RIGHT="0" SIGIS="undef" SIGNAME="red_Dout">
           <CONNECTIONS>
             <CONNECTION INSTANCE="red" PORT="Dout"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="green" SIGIS="undef" SIGNAME="gre_Dout">
+        <PORT DIR="I" LEFT="5" NAME="green" RIGHT="0" SIGIS="undef" SIGNAME="gre_Dout">
           <CONNECTIONS>
             <CONNECTION INSTANCE="gre" PORT="Dout"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="I" NAME="blue" SIGIS="undef" SIGNAME="blue_Dout">
+        <PORT DIR="I" LEFT="4" NAME="blue" RIGHT="0" SIGIS="undef" SIGNAME="blue_Dout">
           <CONNECTIONS>
             <CONNECTION INSTANCE="blue" PORT="Dout"/>
           </CONNECTIONS>
@@ -451,9 +451,9 @@
             <CONNECTION INSTANCE="add_gre" PORT="gpio2_io_o"/>
           </CONNECTIONS>
         </PORT>
-        <PORT CLKFREQUENCY="100000000" DIR="I" NAME="clkb" SIGIS="undef" SIGNAME="processing_system7_0_FCLK_CLK0">
+        <PORT CLKFREQUENCY="25000000" DIR="I" NAME="clkb" SIGIS="undef" SIGNAME="processing_system7_0_FCLK_CLK1">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="ps7_clockc_0" PORT="FCLK0"/>
+            <CONNECTION INSTANCE="ps7_clockc_0" PORT="FCLK1"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="I" LEFT="16" NAME="addrb" RIGHT="0" SIGIS="undef" SIGNAME="vert_Dout &amp; hor_Dout">
@@ -3452,8 +3452,8 @@
       <DOCUMENTS/>
       <PARAMETERS>
         <PARAMETER NAME="DIN_WIDTH" VALUE="10"/>
-        <PARAMETER NAME="DIN_FROM" VALUE="9"/>
-        <PARAMETER NAME="DIN_TO" VALUE="2"/>
+        <PARAMETER NAME="DIN_FROM" VALUE="8"/>
+        <PARAMETER NAME="DIN_TO" VALUE="1"/>
         <PARAMETER NAME="DOUT_WIDTH" VALUE="8"/>
         <PARAMETER NAME="Component_Name" VALUE="design_1_xlslice_0_3"/>
         <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
@@ -3526,12 +3526,12 @@
             <CONNECTION INSTANCE="add_gre" PORT="s_axi_aclk"/>
             <CONNECTION INSTANCE="red_blue" PORT="s_axi_aclk"/>
             <CONNECTION INSTANCE="blk_mem_gen_0" PORT="clka"/>
-            <CONNECTION INSTANCE="blk_mem_gen_0" PORT="clkb"/>
           </CONNECTIONS>
         </PORT>
         <PORT CLKFREQUENCY="25000000" DIR="O" NAME="FCLK1" SIGIS="CLK" SIGNAME="processing_system7_0_FCLK_CLK1">
           <CONNECTIONS>
             <CONNECTION INSTANCE="ps7_dev_cfg_0" PORT="FCLK1"/>
+            <CONNECTION INSTANCE="blk_mem_gen_0" PORT="clkb"/>
             <CONNECTION INSTANCE="VGA_SYNC_0" PORT="clock_25Mhz"/>
           </CONNECTIONS>
         </PORT>

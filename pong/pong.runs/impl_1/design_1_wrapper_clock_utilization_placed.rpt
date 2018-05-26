@@ -1,7 +1,7 @@
 Copyright 1986-2014 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2014.3.1 (win64) Build 1056140 Thu Oct 30 17:03:40 MDT 2014
-| Date         : Thu May 10 11:56:55 2018
+| Date         : Fri May 25 17:39:19 2018
 | Host         : ADRINRODRGU0910 running 64-bit major release  (build 9200)
 | Command      : report_clock_utilization -file design_1_wrapper_clock_utilization_placed.rpt
 | Design       : design_1_wrapper
@@ -48,8 +48,8 @@ Table of Contents
 +-------+------------------------------------------------------------------------+------------------------------------------------+------+-------+-------+---------------+-----------+
 | Index | BUFG Cell                                                              | Net Name                                       | BELs | Sites | Fixed | MaxDelay (ns) | Skew (ns) |
 +-------+------------------------------------------------------------------------+------------------------------------------------+------+-------+-------+---------------+-----------+
-|     1 | design_1_i/processing_system7_0/inst/buffer_fclk_clk_1.FCLK_CLK_1_BUFG | design_1_i/processing_system7_0/inst/FCLK_CLK1 |   49 |    18 |    no |         1.911 |     0.238 |
-|     2 | design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG | design_1_i/processing_system7_0/inst/FCLK_CLK0 | 1125 |   393 |    no |         1.907 |     0.297 |
+|     1 | design_1_i/processing_system7_0/inst/buffer_fclk_clk_1.FCLK_CLK_1_BUFG | design_1_i/processing_system7_0/inst/FCLK_CLK1 |  142 |   103 |    no |         1.911 |     0.312 |
+|     2 | design_1_i/processing_system7_0/inst/buffer_fclk_clk_0.FCLK_CLK_0_BUFG | design_1_i/processing_system7_0/inst/FCLK_CLK0 | 1148 |   355 |    no |         1.904 |     0.305 |
 +-------+------------------------------------------------------------------------+------------------------------------------------+------+-------+-------+---------------+-----------+
 
 
@@ -73,10 +73,10 @@ Table of Contents
 +-------------------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+
 | Clock Region Name | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail | Used | Avail |
 +-------------------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+
-| X0Y0              |    1 |    12 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |  714 |  8800 |   52 |  1600 |    0 |    20 |   10 |    10 |    0 |    20 |
-| X1Y0              |    2 |    12 |    0 |     4 |    0 |     2 |    0 |     4 |    0 |     1 |    0 |     1 |    0 |     0 |    0 |     0 |    0 |    50 |    0 |    50 |   89 |  8800 |    0 |  1400 |    0 |    40 |   18 |    20 |    0 |    20 |
-| X0Y1              |    1 |    12 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |  258 |  8800 |   18 |  1600 |    0 |    20 |    3 |    10 |    0 |    20 |
-| X1Y1              |    2 |    12 |    0 |     4 |    0 |     2 |    0 |     4 |    0 |     1 |    0 |     1 |    0 |     0 |    0 |     0 |    0 |    50 |    0 |    50 |    6 |  8800 |    0 |  1400 |    0 |    40 |    5 |    20 |    0 |    20 |
+| X0Y0              |    2 |    12 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |  696 |  8800 |   54 |  1600 |    0 |    20 |   10 |    10 |    0 |    20 |
+| X1Y0              |    2 |    12 |    0 |     4 |    0 |     2 |    0 |     4 |    0 |     1 |    0 |     1 |    0 |     0 |    0 |     0 |    0 |    50 |    0 |    50 |   42 |  8800 |    0 |  1400 |    0 |    40 |   20 |    20 |    0 |    20 |
+| X0Y1              |    2 |    12 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |    0 |     0 |  289 |  8800 |   16 |  1600 |    0 |    20 |   10 |    10 |    0 |    20 |
+| X1Y1              |    2 |    12 |    0 |     4 |    0 |     2 |    0 |     4 |    0 |     1 |    0 |     1 |    0 |     0 |    0 |     0 |    0 |    50 |    0 |    50 |   72 |  8800 |    0 |  1400 |    0 |    40 |   20 |    20 |    0 |    20 |
 +-------------------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+------+-------+
 * RAMB36 site can be used as two RAMB18/FIFO18 sites
 
@@ -87,7 +87,8 @@ Table of Contents
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 | Source Type | BUFHCE Site | Fixed | MMCM Pins | PLL Pins | GT Pins | BRAM Pins | ILOGICs | OLOGICs | FFs | LUTMs | DSP48E1s |                 Clock Net Name                 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |        20 |       0 |       0 | 714 |    52 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        10 |       0 |       0 |   5 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        10 |       0 |       0 | 691 |    54 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 
 
@@ -97,8 +98,8 @@ Table of Contents
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 | Source Type | BUFHCE Site | Fixed | MMCM Pins | PLL Pins | GT Pins | BRAM Pins | ILOGICs | OLOGICs | FFs | LUTMs | DSP48E1s |                 Clock Net Name                 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |        36 |       0 |       0 |  41 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |         0 |       0 |       0 |  48 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        20 |       0 |       0 |   7 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        20 |       0 |       0 |  35 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 
 
@@ -108,7 +109,8 @@ Table of Contents
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 | Source Type | BUFHCE Site | Fixed | MMCM Pins | PLL Pins | GT Pins | BRAM Pins | ILOGICs | OLOGICs | FFs | LUTMs | DSP48E1s |                 Clock Net Name                 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |         6 |       0 |       0 | 258 |    18 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        10 |       0 |       0 |   3 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        10 |       0 |       0 | 286 |    16 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 
 
@@ -118,8 +120,8 @@ Table of Contents
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 | Source Type | BUFHCE Site | Fixed | MMCM Pins | PLL Pins | GT Pins | BRAM Pins | ILOGICs | OLOGICs | FFs | LUTMs | DSP48E1s |                 Clock Net Name                 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |         0 |       0 |       0 |   1 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
-| BUFG        |     ---     |   no  |         0 |        0 |       0 |        10 |       0 |       0 |   5 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        20 |       0 |       0 |   5 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK0 |
+| BUFG        |     ---     |   no  |         0 |        0 |       0 |        20 |       0 |       0 |  67 |     0 |        0 | design_1_i/processing_system7_0/inst/FCLK_CLK1 |
 +-------------+-------------+-------+-----------+----------+---------+-----------+---------+---------+-----+-------+----------+------------------------------------------------+
 
 
@@ -155,5 +157,5 @@ resize_pblock [get_pblocks CLKAG_design_1_i/processing_system7_0/inst/FCLK_CLK0]
 #startgroup
 create_pblock CLKAG_design_1_i/processing_system7_0/inst/FCLK_CLK1
 add_cells_to_pblock [get_pblocks  CLKAG_design_1_i/processing_system7_0/inst/FCLK_CLK1] [get_cells  -filter { IS_PRIMITIVE==1 && PRIMITIVE_LEVEL !=INTERNAL } -of_object [get_pins -filter {DIRECTION==IN} -of_objects [get_nets -hierarchical -filter {PARENT=="design_1_i/processing_system7_0/inst/FCLK_CLK1"}]]]
-resize_pblock [get_pblocks CLKAG_design_1_i/processing_system7_0/inst/FCLK_CLK1] -add {CLOCKREGION_X1Y0:CLOCKREGION_X1Y0 CLOCKREGION_X1Y1:CLOCKREGION_X1Y1}
+resize_pblock [get_pblocks CLKAG_design_1_i/processing_system7_0/inst/FCLK_CLK1] -add {CLOCKREGION_X0Y0:CLOCKREGION_X0Y0 CLOCKREGION_X0Y1:CLOCKREGION_X0Y1 CLOCKREGION_X1Y0:CLOCKREGION_X1Y0 CLOCKREGION_X1Y1:CLOCKREGION_X1Y1}
 #endgroup

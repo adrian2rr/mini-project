@@ -7,11 +7,10 @@
 	<buildSpec>
 	</buildSpec>
 	<natures>
-		<nature>com.xilinx.sdk.hw.HwProject</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1525946360231</id>
+			<id>1527263012678</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -20,7 +19,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1525946360236</id>
+			<id>1527263012690</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -29,7 +28,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1525946360244</id>
+			<id>1527263012700</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -38,7 +37,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1525946360249</id>
+			<id>1527263012712</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -47,7 +46,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1525946360266</id>
+			<id>1527263012722</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -56,7 +55,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1525946360273</id>
+			<id>1527263012732</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
