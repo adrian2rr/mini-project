@@ -28,4 +28,6 @@ extern BALL crear_ball(RGB color, RGB fondo, int size, int x, int y);
 
 extern int expon(int x, int y);
 
+extern SCOREBOARD crear_scoreboard();
+
 #endif /* UTILS_H_ */

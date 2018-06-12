@@ -34,21 +34,19 @@
 struct sockaddr_in serv_addr;
 static unsigned server_port = 8080;
 
-#define BUFFER_SIZE 9
+#define BUFFER_SIZE 11
 //static char rx_buffer[BUFFER_SIZE];
 
 struct netif server_netif;
 
 int conections;
-int conections_a[8];
+int conections_s;
+//u32_t conections_a;
 
 xQueueHandle quenet;
 xQueueHandle quegam;
 
-xQueueHandle conections_q[8];
-
 xTaskHandle recev;
-xTaskHandle serv[4];
 
 int mod;
 
@@ -100,11 +98,11 @@ int send_ack(int sd, int c){
 	int nwrote, i;
 	char tx_buffer[BUFFER_SIZE];
 
-	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = '0'; }
+	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = 0; }
 	tx_buffer[BUFFER_SIZE-1] = '\0';
 	tx_buffer[0] = c;
 
-	if((nwrote = write(sd, tx_buffer, BUFFER_SIZE)) < 0)
+	if((nwrote = lwip_send(sd, tx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0)
 		nwrote = 1;
 	else
 		nwrote = 0;
@@ -114,7 +112,7 @@ int send_ack(int sd, int c){
 
 void resetQueue(xQueueHandle *q){
 	vQueueDelete(*q);
-	*q = xQueueCreate( 5, sizeof( struct MESS ) );
+	*q = xQueueCreate( 20, sizeof( struct MESS ) );
 }
 
 xQueueHandle getqueue(int n){
@@ -154,34 +152,40 @@ void contr_gam(char *rx_bufer){
 	MESS mess;
 	int subid;
 
-	subid = (int) rx_bufer[1];
+	subid = rx_bufer[1];
 
 	if (subid < 3){
 		mess.id = 2;
 		mess.subid = subid;
-		xQueueSendToBack( quegam, &mess, ( portTickType ) 0 );
+		xQueueSendToBack( quegam, &mess, ( portTickType ) 10 );
 	}else{
 		mess.id = 2;
 		mess.subid = 3;
-		mess.xb = (int)rx_bufer[2]*256 + (int)rx_bufer[3];
-		mess.yb = (int)rx_bufer[4]*256 + (int)rx_bufer[5];
-		mess.p = (int)rx_bufer[6]*256 + (int)rx_bufer[7];
+		mess.xb = rx_bufer[2]*256 + rx_bufer[3];
+		mess.yb = rx_bufer[4]*256 + rx_bufer[5];
+		mess.p = rx_bufer[6]*256 + rx_bufer[7];
+		mess.l = rx_bufer[8];
+		mess.v = rx_bufer[9];
 
-		xQueueSendToBack( quegam, &mess, ( portTickType ) 0 );
+		xQueueSendToBack( quegam, &mess, ( portTickType ) 10 );
 	}
 
 	return;
 }
 
-void clien_sen(int i){
+int clien_sen(int i){
 	MESS mess;
 
 	mess.id = 3;
 	mess.subid = i;
 
-	xQueueSendToBack( quegam, &mess, ( portTickType ) 0 );
+	xQueueSendToBack( quegam, &mess, ( portTickType ) 10 );
 
-	return;
+	if (mess.subid == 2){
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 
@@ -191,19 +195,19 @@ int check_rx(int sd, char *rx_bufer){
 
 	fin = 0;
 
-	printf("\n recibido: %d %d %d %d %d",(int)rx_bufer[0],(int)rx_bufer[1],(int)rx_bufer[2]*256 + (int)rx_bufer[3],(int)rx_bufer[4]*256 + (int)rx_bufer[5],(int)rx_bufer[6]*256 + (int)rx_bufer[7]);
+	//printf("\n recibido: %d %d %d %d %d %d %d",rx_bufer[0],rx_bufer[1],rx_bufer[2]*256 + rx_bufer[3],rx_bufer[4]*256 + rx_bufer[5],rx_bufer[6]*256 + rx_bufer[7],rx_bufer[8],rx_bufer[9]);
 
-	switch((int)rx_bufer[0]){
+	switch(rx_bufer[0]){
 	case 0:
 		fin = send_ack(sd, 0);
 		break;
 	case 1:
-		fin = contr_ini(sd, (int)rx_bufer[1]);
+		fin = contr_ini(sd, rx_bufer[1]);
 	case 2:
 		contr_gam(rx_bufer);
 		break;
 	case 3:
-		clien_sen((int)rx_bufer[1]);
+		fin = clien_sen(rx_bufer[1]);
 		break;
 	default:
 		fin = 1;
@@ -218,7 +222,7 @@ int send_mss(int sd, MESS mess){
 	int nwrote, i;
 	char tx_buffer[BUFFER_SIZE];
 
-	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = '0'; }
+	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = 0; }
 	tx_buffer[BUFFER_SIZE-1] = '\0';
 	tx_buffer[0] = mess.id;
 	tx_buffer[1] = mess.subid;
@@ -228,10 +232,12 @@ int send_mss(int sd, MESS mess){
 	tx_buffer[5] = mess.yb%256;
 	tx_buffer[6] =  mess.p/256;
 	tx_buffer[7] = mess.p%256;
+	tx_buffer[8] = mess.l;
+	tx_buffer[9] = mess.v;
 
-	printf("\n transmitido: %d %d %d %d %d",(int)tx_buffer[0],(int)tx_buffer[1],(int)tx_buffer[2]*256 + (int)tx_buffer[3],(int)tx_buffer[4]*256 + (int)tx_buffer[5],(int)tx_buffer[6]*256 + (int)tx_buffer[7]);
+	//printf("\n transmitido: %d %d %d %d %d %d %d",tx_buffer[0],tx_buffer[1],tx_buffer[2]*256 + tx_buffer[3],tx_buffer[4]*256 + tx_buffer[5],tx_buffer[6]*256 + tx_buffer[7],tx_buffer[8],tx_buffer[9]);
 
-	if((nwrote = write(sd, tx_buffer, BUFFER_SIZE)) < 0)
+	if((nwrote = lwip_send(sd, tx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0)
 		nwrote = 1;
 	else
 		nwrote = 0;
@@ -270,18 +276,18 @@ void receiver() {
 	while (fin == 0) {
 
 		if ((i = recv(sock, rx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0) {
-					timeout = timeout - 5;
+					timeout = timeout - 1;
 					if(timeout <= 0){
 						printf("%s: error reading from socket %d, closing socket\r\n", __FUNCTION__, sock);
 						fin = 1;
 						break;
 					}
-					vTaskDelay( 5 / portTICK_RATE_MS );
+					vTaskDelay( 1 / portTICK_RATE_MS );
 		}else{
 
 			timeout = 6000;
 			fin = check_rx(sock, rx_buffer);
-
+			//printf("\n %d",fin);
 		}
 
 		if( xQueueReceive( quenet, &( mess ), ( portTickType ) 10 ) ){
@@ -307,7 +313,6 @@ void client_rx_data() {
 	struct ip_addr servaddr;
 	int serv_port, ips[4];
 
-	//TODO CAMBIAR PUERTOS Y IPs
 	serv_port = server_port;
 
 	int ok;
@@ -346,7 +351,9 @@ void client_rx_data() {
 
 	recev = sys_thread_new("receiver", (void(*)(void*))receiver, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
-	while(recev != NULL);
+	while(recev != NULL){
+		vTaskDelay( 1000 / portTICK_RATE_MS );
+	}
 
 	print("\nEXITING \n");
 
@@ -355,65 +362,19 @@ void client_rx_data() {
 
 //======================= SERVER ==================================
 
-xQueueHandle get_queser(int p){
+void con_clien(int p){
 
-	return conections_q[p];
-}
-
-void close_clien(int p){
-
-	xQueueHandle queue_g;
 	MESS mess;
 
-	queue_g = conections_q[p*2+1];
-
 	mess.id = 1;
-	mess.subid = 2;
+	mess.subid = p;
 	mess.p = 0;
 	mess.xb = 0;
 	mess.yb = 0;
+	mess.l = 0;
+	mess.v = 0;
 
-	xQueueSendToBack( queue_g, &mess, ( portTickType ) 0 );
-
-	return;
-}
-
-void print_clien(){
-
-	int i;
-
-	for(i = 0;i < 3; i++){
-
-		printf("\n - %d) Socket: %d - IP: %d",i+1,conections_a[i*2],conections_a[i*2+1]);
-	}
-	print("\n Choose one and select 1 to play, 0 to cancel\n Press 0 to exit\n");
-
-	return;
-}
-
-void delete_connec(int sd){
-
-	int i, c;
-
-	c = 0;
-
-	for(i = 0; i < 3; i++){
-
-		if(conections_a[i*2] == sd){
-			c = 1;
-		}
-		if ( c == 1 ){
-			conections_a[i*2] = conections_a[(i+1)*2];
-			conections_a[i*2+1] = conections_a[(i+1)*2+1];
-			conections_q[i*2] = conections_q[(i+1)*2];
-			conections_q[i*2+1] = conections_q[(i+1)*2+1];
-		}
-	}
-
-	conections_a[6] = 0;
-	conections_a[7] = 0;
-	conections_q[6] = 0;
-	conections_q[7] = 0;
+	xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 	return;
 }
@@ -423,7 +384,7 @@ int run_command(int sd, MESS mess){
 	char tx_buffer[BUFFER_SIZE];
 	int i, nwrote;
 
-	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = '0'; }
+	for(i=0;i<BUFFER_SIZE-1; i++){ tx_buffer[i] = 0; }
 	tx_buffer[BUFFER_SIZE-1] = '\0';
 	tx_buffer[0] = mess.id;
 	tx_buffer[1] = mess.subid;
@@ -431,13 +392,15 @@ int run_command(int sd, MESS mess){
 	tx_buffer[3] = mess.xb%256;
 	tx_buffer[4] = mess.yb/256;
 	tx_buffer[5] = mess.yb%256;
-	tx_buffer[6] =  mess.p/256;
+	tx_buffer[6] = mess.p/256;
 	tx_buffer[7] = mess.p%256;
+	tx_buffer[8] = mess.l;
+	tx_buffer[9] = mess.v;
 
-	printf("\n transmitido: %d %d %d %d %d",(int)tx_buffer[0],(int)tx_buffer[1],(int)tx_buffer[2]*256 + (int)tx_buffer[3],(int)tx_buffer[4]*256 + (int)tx_buffer[5],(int)tx_buffer[6]*256 + (int)tx_buffer[7]);
+	//printf("\n transmitido: %d %d %d %d %d %d %d",tx_buffer[0],tx_buffer[1],tx_buffer[2]*256 + tx_buffer[3],tx_buffer[4]*256 + tx_buffer[5],tx_buffer[6]*256 + tx_buffer[7],tx_buffer[8],tx_buffer[9]);
 
 
-	if((nwrote = write(sd, tx_buffer, BUFFER_SIZE)) < 0)
+	if((nwrote = lwip_send(sd, tx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0)
 		nwrote = 1;
 	else
 		nwrote = 0;
@@ -453,36 +416,42 @@ int check_rx_se(int sd, char *rx_bufer, xQueueHandle gam){
 
 	fin = 0;
 
-	printf("\n recibido: %d %d %d %d %d",(int)rx_bufer[0],(int)rx_bufer[1],(int)rx_bufer[2]*256 + (int)rx_bufer[3],(int)rx_bufer[4]*256 + (int)rx_bufer[5],(int)rx_bufer[6]*256 + (int)rx_bufer[7]);
+	//printf("\n recibido: %d %d %d %d %d %d %d",rx_bufer[0],rx_bufer[1],rx_bufer[2]*256 + rx_bufer[3],rx_bufer[4]*256 + rx_bufer[5],rx_bufer[6]*256 + rx_bufer[7],rx_bufer[8],rx_bufer[9]);
 
-	switch((int)rx_bufer[0]){
+	switch(rx_bufer[0]){
 	case 0:
 		break;
 	case 1:
 		mess.id = 1;
-		mess.subid = (int) rx_bufer[1];
-		mess.xb = (int)rx_bufer[2]*256 + (int)rx_bufer[3];
-		mess.yb = (int)rx_bufer[4]*256 + (int)rx_bufer[5];
-		mess.p = (int)rx_bufer[6]*256 + (int)rx_bufer[7];
-		xQueueSendToBack( gam, &mess, ( portTickType ) 0 );
+		mess.subid = rx_bufer[1];
+		mess.xb = rx_bufer[2]*256 + rx_bufer[3];
+		mess.yb = rx_bufer[4]*256 + rx_bufer[5];
+		mess.p = rx_bufer[6]*256 + rx_bufer[7];
+		mess.l = rx_bufer[8];
+		mess.v = rx_bufer[9];
+		xQueueSendToBack( gam, &mess, ( portTickType ) 10 );
 		break;
 	case 2:
 		mess.id = 2;
-		mess.subid = (int) rx_bufer[1];
-		mess.xb = (int)rx_bufer[2]*256 + (int)rx_bufer[3];
-		mess.yb = (int)rx_bufer[4]*256 + (int)rx_bufer[5];
-		mess.p = (int)rx_bufer[6]*256 + (int)rx_bufer[7];
-		xQueueSendToBack( gam, &mess, ( portTickType ) 0 );
+		mess.subid = rx_bufer[1];
+		mess.xb = rx_bufer[2]*256 + rx_bufer[3];
+		mess.yb = rx_bufer[4]*256 + rx_bufer[5];
+		mess.p = rx_bufer[6]*256 + rx_bufer[7];
+		mess.l = rx_bufer[8];
+		mess.v = rx_bufer[9];
+		xQueueSendToBack( gam, &mess, ( portTickType ) 10 );
 		if(mess.subid == 2)
 			fin = 1;
 		break;
 	case 3:
 		mess.id = 3;
-		mess.subid = (int) rx_bufer[1];
-		mess.xb = (int)rx_bufer[2]*256 + (int)rx_bufer[3];
-		mess.yb = (int)rx_bufer[4]*256 + (int)rx_bufer[5];
-		mess.p = (int)rx_bufer[6]*256 + (int)rx_bufer[7];
-		xQueueSendToBack( gam, &mess, ( portTickType ) 0 );
+		mess.subid = rx_bufer[1];
+		mess.xb = rx_bufer[2]*256 + rx_bufer[3];
+		mess.yb = rx_bufer[4]*256 + rx_bufer[5];
+		mess.p = rx_bufer[6]*256 + rx_bufer[7];
+		mess.l = rx_bufer[8];
+		mess.v = rx_bufer[9];
+		xQueueSendToBack( gam, &mess, ( portTickType ) 10 );
 		break;
 	default:
 		fin = 1;
@@ -493,27 +462,24 @@ int check_rx_se(int sd, char *rx_bufer, xQueueHandle gam){
 
 }
 
-void transmitter(void *p){
+void transmitter(){
 
 	int i, timeout, fin, finl, sd, timeout2;
-	int pun = (int)p;
 	char rx_buffer[BUFFER_SIZE];
-	xQueueHandle queue_g, queue_n;
 	MESS mess;
 
-	queue_g = xQueueCreate( 5, sizeof( struct MESS ) );
-	queue_n = xQueueCreate( 5, sizeof( struct MESS ) );
+	resetQueue(&quenet);
+	resetQueue(&quegam);
 
-	conections_q[pun*2] = queue_g;
-	conections_q[pun*2+1] = queue_n;
-
-	sd = conections_a[pun*2];
+	sd = conections_s;
 
 	mess.id = 0;
 	mess.subid = 0;
 	mess.p = 0;
 	mess.xb = 0;
 	mess.yb = 0;
+	mess.l = 0;
+	mess.v = 0;
 
 	fin = 0;
 
@@ -536,14 +502,14 @@ void transmitter(void *p){
 				}
 				vTaskDelay( 10 / portTICK_RATE_MS );
 			}else{
-				if(rx_buffer[0] == 3 && rx_buffer[1]== 3){
+				if(rx_buffer[0] == 3 && rx_buffer[1] == 3){
 					fin = 2;
 				}
 				finl = 1;
 			}
 		}
 
-		if( xQueueReceive( queue_n, &( mess ), ( portTickType ) 10 ) ){
+		if( xQueueReceive( quenet, &( mess ), ( portTickType ) 10 ) ){
 
 			run_command(sd, mess);
 
@@ -573,7 +539,7 @@ void transmitter(void *p){
 						}
 						vTaskDelay( 10 / portTICK_RATE_MS );
 					}else{
-						fin = check_rx_se(sd, rx_buffer, queue_g);
+						fin = check_rx_se(sd, rx_buffer, quegam);
 						if(rx_buffer[0] == 3 && rx_buffer[1]== 3){
 							fin = 2;
 						}
@@ -588,20 +554,20 @@ void transmitter(void *p){
 	while(fin == 0){
 
 		if ((i = recv(sd, rx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0) {
-			timeout = timeout - 5;
+			timeout = timeout - 1;
 			if(timeout <= 0){
 				printf("%s: error reading from socket %d, closing socket\r\n", __FUNCTION__, sd);
 				fin = 1;
 				break;
 			}
-			vTaskDelay( 5 / portTICK_RATE_MS );
+			vTaskDelay( 1 / portTICK_RATE_MS );
 		}else{
 
 			timeout = 1000;
-			fin = check_rx_se(sd, rx_buffer, queue_g);
+			fin = check_rx_se(sd, rx_buffer, quegam);
 		}
 
-		if( xQueueReceive( queue_n, &( mess ), ( portTickType ) 10 ) ){
+		if( xQueueReceive( quenet, &( mess ), ( portTickType ) 10 ) ){
 			timeout2 = 1500;
 			if(mess.id == 3 && mess.subid == 2)
 				fin = 1;
@@ -609,7 +575,7 @@ void transmitter(void *p){
 			run_command(sd, mess);
 
 		}else{
-			timeout2 = timeout2 - 5;
+			timeout2 = timeout2 - 1;
 			if(timeout2 <= 0){
 				mess.id = 0;
 				run_command(sd, mess);
@@ -620,7 +586,6 @@ void transmitter(void *p){
 	}
 
 	close(sd);
-	delete_connec(sd);
 	conections--;
 	write_led(expon(2,conections)-1);
 	vTaskDelete(NULL);
@@ -631,6 +596,11 @@ void server_tx_data() {
 	int sock, new_sd;
 	struct sockaddr_in address, remote;
 	int size;
+
+	network_thread();
+
+	quenet = xQueueCreate( 5, sizeof( struct MESS ) );
+	quegam = xQueueCreate( 5, sizeof( struct MESS ) );
 
 	conections = 0;
 
@@ -657,18 +627,19 @@ void server_tx_data() {
 
 	while (1) {
 		new_sd = lwip_accept(sock, (struct sockaddr *)&remote, (socklen_t *)&size);
-		if (new_sd > 0 && conections < 4){
+		if (new_sd > 0 && conections < 1){
 			/* spawn a separate handler for each request */
-			write_led(expon(2,conections+1)-1);
+			//write_led(expon(2,conections+1)-1);
 
-			printf(" -- New connection --\n Socket: %d\n Addr: %d",new_sd ,(int)remote.sin_addr.s_addr);
+			printf(" -- New connection --\n Socket: %d -- Addr: %d",new_sd ,(int)remote.sin_addr.s_addr);
 
-			conections_a[conections*2] = new_sd;
-			conections_a[conections*2+1] = (int)remote.sin_addr.s_addr;
+			conections_s = new_sd;
 
-			sys_thread_new("n_client", (void(*)(void*))transmitter, (void*)conections, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+			sys_thread_new("n_client", (void(*)(void*))transmitter, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
 			conections++;
+		}else if(new_sd > 0){
+
 		}
 	}
 
@@ -676,23 +647,3 @@ void server_tx_data() {
 	return;
 }
 
-//======================= MAIN ==================================
-
-void network_main(){
-
-	network_thread();
-
-	quenet = xQueueCreate( 5, sizeof( struct MESS ) );
-	quegam = xQueueCreate( 5, sizeof( struct MESS ) );
-
-	sys_thread_new("server_thrd", (void(*)(void*))server_tx_data, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
-
-	while(1){
-
-	}
-
-
-	vTaskDelete(NULL);
-
-	return;
-}

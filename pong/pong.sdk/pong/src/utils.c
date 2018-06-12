@@ -153,3 +153,20 @@ int expon(int x, int y){
 
 	return resul;
 }
+
+SCOREBOARD crear_scoreboard(){
+
+	SCOREBOARD scoreboard;
+
+	scoreboard.score_p1 = 0;
+	scoreboard.score_p2 = 0;
+
+	scoreboard.posx_p1 = X_SCOREBOARD_P1;
+	scoreboard.posx_p2 = X_SCOREBOARD_P2;
+
+	scoreboard.posy = Y_SCOREBOARD;
+
+	scoreboard.size = SIZE_SCOREBOARD;
+
+	return scoreboard;
+}

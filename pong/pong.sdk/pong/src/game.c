@@ -18,6 +18,7 @@
 #include "config.h"
 #include "utils.h"
 #include "plot.h"
+#include "scoreboard.h"
 
 //====================================================
 
@@ -46,6 +47,10 @@ int online_st;
 int on_sw_st;
 
 int fin;
+
+int marc[2];
+
+SCOREBOARD scoreboard;
 
 //====================================================
 
@@ -110,6 +115,9 @@ void control_ball(){
 
 	int aux;
 
+	marc[0] = 0;
+	marc[1] = 0;
+
 	vTaskSuspend(NULL);
 
 	while(g_bucle){
@@ -127,6 +135,8 @@ void control_ball(){
 					ball.lposx = ball.posx;
 					ball.posx = b_ini_x;
 					ball.ysp = 0;
+					marc[0]++;
+					scoreboard.score_p1++;
 				}else{
 					ball.lposx = ball.posx;
 					ball.posx += ball.xsp;
@@ -145,6 +155,8 @@ void control_ball(){
 					ball.lposx = ball.posx;
 					ball.posx = b_ini_x;
 					ball.ysp = 0;
+					marc[1]++;
+					scoreboard.score_p2++;
 				}else{
 					ball.lposx = ball.posx;
 					ball.posx += ball.xsp;
@@ -193,8 +205,15 @@ void control_ball(){
 
 		plot_ball(ball);
 		plot_red(color_cua, 7, 20);
+		actualizar_scoreboard(scoreboard);
 
-		vTaskDelay( 30 / portTICK_RATE_MS );
+		vTaskDelay( 10 / portTICK_RATE_MS );
+
+		if(marc[0] == 7){
+			g_bucle = 0;
+		}else if(marc[1] == 7){
+			g_bucle = 0;
+		}
 
 	}
 
@@ -233,9 +252,11 @@ void pala_ia(){
 
 		}
 
-		vTaskDelay( 20 / portTICK_RATE_MS );
+		vTaskDelay( 30 / portTICK_RATE_MS );
 
 	}
+
+	fin = 0;
 
 	vTaskDelete(NULL);
 	return;
@@ -243,9 +264,8 @@ void pala_ia(){
 
 void empty_task(){
 
-	vTaskSuspend(NULL);
-
-	while(g_bucle);
+	while(g_bucle)
+		vTaskSuspend(NULL);
 
 	vTaskDelete(NULL);
 	return;
@@ -276,6 +296,7 @@ void init_game(){
 	bot_limit = MAP_RES-(FRAME_OFFSET+FRAME_SIZE+pala1.largo);
 
 	g_bucle = 1;
+	on_sw_st = 1;
 
 	limit_ty = FRAME_OFFSET+FRAME_SIZE+1;
 	limit_by = MAP_RES-(FRAME_OFFSET+FRAME_SIZE+1);
@@ -290,12 +311,15 @@ void init_game(){
 	ball.xsp = 5;
 	ball.ysp = 0;
 
+	scoreboard = crear_scoreboard();
+
 	return;
 }
 
 void game_resume(int t){
 
 	if(t == 1){
+		print("\n\n --- Resuming Game --- ");
 		vTaskResume(juego[0]);
 		vTaskResume(juego[1]);
 		vTaskResume(juego[2]);
@@ -309,6 +333,7 @@ void game_resume(int t){
 void game_susp(int t){
 
 	if(t == 1){
+		print("\n\n --- Pausing Game ---");
 		vTaskSuspend(juego[0]);
 		vTaskSuspend(juego[1]);
 		vTaskSuspend(juego[2]);
@@ -322,6 +347,7 @@ void game_susp(int t){
 void game_del(int t){
 
 	if(t == 1){
+		print("\n\n --- Exiting -- \n");
 		vTaskDelete(juego[0]);
 		vTaskDelete(juego[1]);
 		vTaskDelete(juego[2]);
@@ -336,19 +362,21 @@ void game_del(int t){
 void resume_online(int c){
 
 	if(c == 0){
+		print("\n\n --- Resuming Game Local --- ");
 		if(online_st == 1){
 			vTaskResume(juego[1]);
 			vTaskResume(juego[2]);
 			online_st = 0;
-		}else{
+		}else if(online_st == 3){
 			online_st = 2;
 		}
 	}else{
+		print("\n\n --- Resuming Game Remote --- ");
 		if(online_st == 2){
 			vTaskResume(juego[1]);
 			vTaskResume(juego[2]);
 			online_st = 0;
-		}else{
+		}else if(online_st == 3){
 			online_st = 1;
 		}
 	}
@@ -359,19 +387,21 @@ void resume_online(int c){
 void susp_online(int c){
 
 	if(c == 0){
+		print("\n\n --- Pausing Game Local ---");
 		if(online_st == 0){
 			vTaskSuspend(juego[1]);
 			vTaskSuspend(juego[2]);
 			online_st = 1;
-		}else{
+		}else if(online_st == 2){
 			online_st = 3;
 		}
 	}else{
+		print("\n\n --- Pausing Game Remote ---");
 		if(online_st == 0){
 			vTaskSuspend(juego[1]);
 			vTaskSuspend(juego[2]);
 			online_st = 2;
-		}else{
+		}else if(online_st == 1){
 			online_st = 3;
 		}
 	}
@@ -387,8 +417,10 @@ void send_client(int s){
 	mess.p = 0;
 	mess.xb = 0;
 	mess.yb = 0;
+	mess.l = 0;
+	mess.v = 0;
 
-	xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+	xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 	return;
 }
@@ -404,7 +436,7 @@ void paint_rem(){
 
 	ch_st = 1;
 
-	online_st = 1;
+	online_st = 3;
 
 	while(g_bucle){
 
@@ -413,7 +445,7 @@ void paint_rem(){
 			if(mess.id == 2){
 				if(mess.subid < 3){
 
-					xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+					xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 					vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -425,6 +457,7 @@ void paint_rem(){
 						susp_online(1);
 						break;
 					case 2:
+						print("\n\n --- Exiting remote -- \n");
 						g_bucle = 0;
 						break;
 					}
@@ -434,10 +467,12 @@ void paint_rem(){
 					xball = mess.xb;
 					yball = mess.yb;
 					pala = mess.p;
+					marc[1] = mess.l;
+					marc[0] = mess.v;
 
 					mess.p = pala1.pos;
 
-					xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+					xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 					vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -463,6 +498,7 @@ void paint_rem(){
 					susp_online(0);
 					break;
 				case 2:
+					print("\n\n --- Exiting Local-- \n");
 					g_bucle = 0;
 					break;
 				}
@@ -494,36 +530,38 @@ void send_serv(int s){
 	mess.p = 0;
 	mess.xb = 0;
 	mess.yb = 0;
+	mess.l = 0;
+	mess.v = 0;
 
-	xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+	xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 	return;
 }
 
-void paint_lo(int* p){
+void paint_lo(){
 
 	MESS mess;
 	int ch_st;
-	int x, po;
+	int x, g_bucle_l;
 
-	po = *p-1;
+	quenet = getqueue(0);
+	quegam = getqueue(1);
 
-	quenet = get_queser(po*2+1);
-	quegam = get_queser(po*2);
-
-	mess.id = 1;
-	mess.subid = 1;
+	mess.id = 0;
+	mess.subid = 0;
 	mess.p = 0;
 	mess.xb = 0;
 	mess.yb = 0;
-
-	xQueueSendToBack( quenet, &mess, 10 );
+	mess.l = 0;
+	mess.v = 0;
 
 	ch_st = 1;
 
-	online_st = 1;
+	online_st = 3;
 
 	x = 0;
+
+	g_bucle_l = 1;
 
 	do{
 
@@ -532,8 +570,9 @@ void paint_lo(int* p){
 			if(mess.id == 1){
 
 			}else{
-				xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 				g_bucle = 0;
+				g_bucle_l = 0;
 			}
 
 			x = 1;
@@ -545,7 +584,7 @@ void paint_lo(int* p){
 
 	}while(x == 0);
 
-	while(g_bucle){
+	while(g_bucle_l){
 
 		if( xQueueReceive( quegam, &( mess ), ( portTickType ) 10 ) ){
 
@@ -560,7 +599,8 @@ void paint_lo(int* p){
 						susp_online(0);
 						break;
 					case 2:
-						g_bucle = 0;
+						print("\n\n --- Exiting Local -- \n");
+						g_bucle_l = 0;
 						break;
 					}
 
@@ -575,7 +615,7 @@ void paint_lo(int* p){
 
 			}else{
 
-				xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
+				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 
 				vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -587,24 +627,26 @@ void paint_lo(int* p){
 					susp_online(1);
 					break;
 				case 2:
-					g_bucle = 0;
+					print("\n\n --- Exiting Remote -- \n");
+					g_bucle_l = 0;
 					break;
 				}
 
 			}
+		}
 
-			if ( online_st == 0 ){
+		if ( online_st == 0 ){
 
-				if(mess.xb != ball.posx){
-					mess.id = 2;
-					mess.subid = 3;
-					mess.p = pala1.pos;
-					mess.xb = MAP_RES - ball.posx;
-					mess.yb = ball.posy;
+			if(mess.xb != ball.posx){
+				mess.id = 2;
+				mess.subid = 3;
+				mess.p = pala1.pos;
+				mess.xb = MAP_RES - ball.posx;
+				mess.yb = ball.posy;
+				mess.l = marc[0];
+				mess.v = marc[1];
 
-					xQueueSendToBack( quenet, &mess, ( portTickType ) 0 );
-				}
-
+				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
 			}
 
 		}
@@ -615,6 +657,10 @@ void paint_lo(int* p){
 
 			send_serv(ch_st);
 
+		}
+
+		if(g_bucle == 0){
+			send_serv(2);
 		}
 
 	}
@@ -636,6 +682,8 @@ void game_thread(int* c){
 
 	t = *c;
 
+	juego[1] = sys_thread_new("control_pala", (void(*)(void*))control_pala, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+
 	switch(t){
 	case 1:
 		fin = 1;
@@ -652,14 +700,10 @@ void game_thread(int* c){
 	default:
 		fin = 3;
 		init_game();
-		int p;
-		p = t/3;
-		juego[0] = sys_thread_new("paint_lo", (void(*)(void*))paint_lo, &p, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+		juego[0] = sys_thread_new("paint_lo", (void(*)(void*))paint_lo, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 		juego[2] = sys_thread_new("control_ball", (void(*)(void*))control_ball, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 		break;
 	}
-
-	juego[1] = sys_thread_new("control_pala", (void(*)(void*))control_pala, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
 	lsw = read_sw();
 
@@ -668,7 +712,7 @@ void game_thread(int* c){
 		vTaskDelay( 100 / portTICK_RATE_MS );
 		game_resume(t);
 	}else if(lsw != 0 && fin != 0){
-		print("\n\n --- Game Ready waiting player1 resume the game -- \n\nOff all switches");
+		print("\n\n --- Game Ready waiting player1 resume the game -- \n\n Off all switches");
 		vTaskDelay( 100 / portTICK_RATE_MS );
 	}
 
@@ -689,16 +733,13 @@ void game_thread(int* c){
 
 		if(nsw != lsw){
 			if(nsw == 0){
-				print("\n\n --- Resuming Game --- ");
 				game_resume(t);
 			}else if(nsw == 1 && lsw == 0){
-				print("\n\n --- Pausing Game ---");
 				game_susp(t);
 			}else if(nsw == 2 && lsw == 0){
-				print("\n\n -- Game paused, finish game?");
 				game_susp(t);
+				print("\n\n -- Game paused, finish game?");
 			}else if(nsw == 3 && lsw == 2){
-				print("\n\n --- Exiting -- \n");
 				game_del(t);
 			}else{
 				print("\n\n - Command not known -");
@@ -706,6 +747,8 @@ void game_thread(int* c){
 			lsw = nsw;
 		}
 	}
+
+	printf("\n Resultado: %d - %d \n", marc[0], marc[1]);
 
 	*c = 0;
 

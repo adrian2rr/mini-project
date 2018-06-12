@@ -8,7 +8,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define THREAD_STACKSIZE 4096
+#define THREAD_STACKSIZE 2048
 
 #define X_RES 320
 #define Y_RES 240
@@ -18,6 +18,11 @@
 #define B_RES 31
 #define G_RES 63
 #define COL_RES 255
+
+#define X_SCOREBOARD_P1 200
+#define X_SCOREBOARD_P2 270
+#define Y_SCOREBOARD 70
+#define SIZE_SCOREBOARD 5
 
 typedef struct PIXEL {
     int x; //[0,100]
@@ -68,6 +73,17 @@ typedef struct MESS {
 	int xb;
 	int yb;
 	int p;
+	int l;
+	int v;
 } MESS;
+
+typedef struct SCOREBOARD{
+	int score_p1;
+	int score_p2;
+	int posx_p1;
+	int posx_p2;
+	int posy;
+	int size;
+} SCOREBOARD;
 
 #endif /* CONFIG_H_ */

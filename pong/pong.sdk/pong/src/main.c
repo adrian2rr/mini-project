@@ -28,7 +28,7 @@ int bucle;
 //====================================================
 
 
-void network_main();
+void server_tx_data();
 
 void game_thread();
 
@@ -36,7 +36,7 @@ void client_rx_data();
 
 void print_clien();
 
-void close_clien();
+void con_clien();
 
 void demo(){
 
@@ -73,6 +73,10 @@ void demo(){
 				ball.lposx = ball.posx;
 				ball.posx += ball.xsp;
 			}else{
+				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				plot_frame(color);
+				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				ball.color = color;
 				ball.lposx = ball.posx;
 				ball.posx += ball.xsp;
 				ball.xsp = -ball.xsp;
@@ -86,6 +90,12 @@ void demo(){
 				ball.lposx = ball.posx;
 				ball.posx += ball.xsp;
 			}else{
+				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				plot_back(color);
+				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				plot_frame(color);
+				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				ball.color = color;
 				ball.lposx = ball.posx;
 				ball.posx += ball.xsp;
 				ball.xsp = -ball.xsp;
@@ -162,32 +172,25 @@ void local_play(){
 
 void serv_play(){
 
-	int c, p, m;
+	int c, m;
 
-	p = 5;
-	m = 0;
+	c = 0;
 
-	do{
-		print_clien();
-		scanf("%d", &p);
-		if( p > 0 && p < 5){
-			print("\n Enter action (1-0): ");
-			scanf("%d", &m);
-		}
-	}while(p>4);
+	print("\n Connect to client? 1 Yes - 0 No \n Enter action (1-0): ");
+	scanf("%d", &m);
 
-	if(p != 0){
-		if(m == 0){
-			close_clien(p);
-		}else{
+	if(m == 0){
+		con_clien(2);
+	}else{
 
-			c = 3*p;
+		con_clien(1);
 
-			sys_thread_new("local_game", (void(*)(void*))game_thread, &c, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+		c = 3;
 
-			while(c != 0){
-				vTaskDelay( 500 / portTICK_RATE_MS );
-			}
+		sys_thread_new("local_game", (void(*)(void*))game_thread, &c, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+
+		while(c != 0){
+			vTaskDelay( 500 / portTICK_RATE_MS );
 		}
 	}
 
@@ -206,7 +209,7 @@ int main_thread()
 	lwip_init();
 	init_gpios();
 
-	sys_thread_new("network_thread", (void(*)(void*))network_main, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+	sys_thread_new("network_thread", (void(*)(void*))server_tx_data, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
 	while(1){
 
@@ -257,7 +260,7 @@ int main()
 
 	print("\t--- INICIANDO ---\n\n");
 
-	sys_thread_new("main_thread", (void(*)(void*))main_thread, 0, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+	sys_thread_new("main_thread", (void(*)(void*))main_thread, 0, THREAD_STACKSIZE, 0);
 
 	vTaskStartScheduler();
 
