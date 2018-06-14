@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "plot.h"
 #include "scoreboard.h"
+#include "network.h"
 
 //====================================================
 
@@ -40,8 +41,6 @@ int b_ini_x, b_ini_y;
 
 xTaskHandle juego[3];
 
-xQueueHandle quenet, quegam;
-
 int online_st;
 
 int on_sw_st;
@@ -53,10 +52,6 @@ int marc[2];
 SCOREBOARD scoreboard;
 
 //====================================================
-
-xQueueHandle getqueue(int n);
-
-xQueueHandle get_queser(int p);
 
 int ball_pala(BALL ball, PALA pala){
 
@@ -207,7 +202,7 @@ void control_ball(){
 		plot_red(color_cua, 7, 20);
 		actualizar_scoreboard(scoreboard);
 
-		vTaskDelay( 10 / portTICK_RATE_MS );
+		vTaskDelay( 25 / portTICK_RATE_MS );
 
 		if(marc[0] == 7){
 			g_bucle = 0;
@@ -308,7 +303,7 @@ void init_game(){
 
 	ball = crear_ball(color_com, fondo, 2, b_ini_x, b_ini_y);
 
-	ball.xsp = 5;
+	ball.xsp = 8;
 	ball.ysp = 0;
 
 	scoreboard = crear_scoreboard();
@@ -420,7 +415,7 @@ void send_client(int s){
 	mess.l = 0;
 	mess.v = 0;
 
-	xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+	send_mss(mess);
 
 	return;
 }
@@ -428,24 +423,29 @@ void send_client(int s){
 void paint_rem(){
 
 	MESS mess;
-	int ch_st;
+	int ch_st, sd, i;
 	int xball, yball, pala;
 
-	quenet = getqueue(0);
-	quegam = getqueue(1);
+	char rx_buffer[BUFFER_SIZE];
 
 	ch_st = 1;
 
 	online_st = 3;
 
-	while(g_bucle){
+	sd = get_sd_c();
 
-		if( xQueueReceive( quegam, &( mess ), ( portTickType ) 10 ) ){
+	while(g_bucle){
+		vTaskDelay( 1 / portTICK_RATE_MS );
+		if ((i = recv(sd, rx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0) {
+
+		}else{
+
+			mess = check_rx(rx_buffer);
 
 			if(mess.id == 2){
 				if(mess.subid < 3){
 
-					xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+					send_mss(mess);
 
 					vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -469,10 +469,12 @@ void paint_rem(){
 					pala = mess.p;
 					marc[1] = mess.l;
 					marc[0] = mess.v;
+					scoreboard.score_p1 = mess.v;
+					scoreboard.score_p2 = mess.l;
 
 					mess.p = pala1.pos;
 
-					xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+					send_mss(mess);
 
 					vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -486,9 +488,12 @@ void paint_rem(){
 					plot_ball(ball);
 					plot_red(color_cua, 7, 20);
 					plot_pala(pala2, 2);
+					actualizar_scoreboard(scoreboard);
+
 
 				}
-			}else{
+
+			}else if(mess.id == 3){
 
 				switch(mess.subid){
 				case 0:
@@ -503,6 +508,17 @@ void paint_rem(){
 					break;
 				}
 
+			}else{
+
+				switch(mess.subid){
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					g_bucle = 0;
+					break;
+				}
 			}
 
 		}
@@ -533,7 +549,7 @@ void send_serv(int s){
 	mess.l = 0;
 	mess.v = 0;
 
-	xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+	run_command(mess);
 
 	return;
 }
@@ -541,11 +557,10 @@ void send_serv(int s){
 void paint_lo(){
 
 	MESS mess;
-	int ch_st;
-	int x, g_bucle_l;
+	int ch_st, sd;
+	int g_bucle_l, i, ballposx;
 
-	quenet = getqueue(0);
-	quegam = getqueue(1);
+	char rx_buffer[BUFFER_SIZE];
 
 	mess.id = 0;
 	mess.subid = 0;
@@ -559,34 +574,18 @@ void paint_lo(){
 
 	online_st = 3;
 
-	x = 0;
-
 	g_bucle_l = 1;
 
-	do{
+	sd = get_sd();
 
-		if( xQueueReceive( quegam, &( mess ), ( portTickType ) 10 ) ){
-
-			if(mess.id == 1){
-
-			}else{
-				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
-				g_bucle = 0;
-				g_bucle_l = 0;
-			}
-
-			x = 1;
-
-		}else{
-			vTaskDelay( 1 / portTICK_RATE_MS );
-		}
-
-
-	}while(x == 0);
+	ballposx = 0;
 
 	while(g_bucle_l){
-
-		if( xQueueReceive( quegam, &( mess ), ( portTickType ) 10 ) ){
+		vTaskDelay( 1 / portTICK_RATE_MS );
+		if ((i = recv(sd, rx_buffer, BUFFER_SIZE, MSG_DONTWAIT)) < 0) {
+			//vTaskDelay( 1 / portTICK_RATE_MS );
+		}else{
+			mess = check_rx_se(rx_buffer);
 
 			if(mess.id == 2){
 				if(mess.subid < 3){
@@ -613,9 +612,9 @@ void paint_lo(){
 
 				}
 
-			}else{
+			}else if(mess.id == 3){
 
-				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+				run_command(mess);
 
 				vTaskDelay( 1 / portTICK_RATE_MS );
 
@@ -637,16 +636,17 @@ void paint_lo(){
 
 		if ( online_st == 0 ){
 
-			if(mess.xb != ball.posx){
+			if(ballposx != ball.posx){
+				ballposx = ball.posx;
 				mess.id = 2;
 				mess.subid = 3;
 				mess.p = pala1.pos;
-				mess.xb = MAP_RES - ball.posx;
+				mess.xb = MAP_RES - ball.posx - FRAME_SIZE;
 				mess.yb = ball.posy;
 				mess.l = marc[0];
 				mess.v = marc[1];
 
-				xQueueSendToBack( quenet, &mess, ( portTickType ) 10 );
+				run_command(mess);
 			}
 
 		}

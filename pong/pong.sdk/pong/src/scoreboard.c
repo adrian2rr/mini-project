@@ -13,6 +13,7 @@
 #include "config.h"
 #include "plot.h"
 #include "utils.h"
+#include "words.h"
 
 //===================== VARIABLES ===============================
 
@@ -205,7 +206,4 @@ void actualizar_scoreboard(SCOREBOARD scoreboard){
 	number_pointer = get_number(score_p2);
 	paint_num(scoreboard.posx_p2,scoreboard.size);
 }
-
-
-
 

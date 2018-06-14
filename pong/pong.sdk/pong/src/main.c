@@ -17,6 +17,7 @@
 #include "config.h"
 #include "utils.h"
 #include "plot.h"
+#include "words.h"
 // Only needed for SDK versions before 2015
 //#include "xutil.h"
   
@@ -37,6 +38,8 @@ void client_rx_data();
 void print_clien();
 
 void con_clien();
+
+void close_server();
 
 void demo(){
 
@@ -66,6 +69,10 @@ void demo(){
 	ball.xsp = 5;
 	ball.ysp = (rand() % 5) + 1;
 
+	RGB fon;
+
+	fon = pon_color(0,0,0);
+
 	while(bucle){
 
 		if (ball.xsp > 0){
@@ -90,8 +97,8 @@ void demo(){
 				ball.lposx = ball.posx;
 				ball.posx += ball.xsp;
 			}else{
-				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
-				plot_back(color);
+				fon = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
+				plot_back(fon);
 				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
 				plot_frame(color);
 				color = pon_color((rand() % 255),(rand() % 255),(rand() % 255));
@@ -128,8 +135,9 @@ void demo(){
 
 		plot_ball(ball);
 		plot_red(color, 5, 10);
+		print_title(fon);
 
-		vTaskDelay( 30 / portTICK_RATE_MS );
+		vTaskDelay( 15 / portTICK_RATE_MS );
 
 	}
 
@@ -181,6 +189,8 @@ void serv_play(){
 
 	if(m == 0){
 		con_clien(2);
+
+		close_server();
 	}else{
 
 		con_clien(1);
@@ -192,6 +202,8 @@ void serv_play(){
 		while(c != 0){
 			vTaskDelay( 500 / portTICK_RATE_MS );
 		}
+
+		close_server();
 	}
 
 	return;
